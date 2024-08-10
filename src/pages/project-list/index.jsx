@@ -24,8 +24,12 @@ const mockData = [
 const ProjectList = () => {
   const [projects, setProjects] = useState(mockData);
   const [showModal, setShowModal] = useState(false);
+  const [showCreateModal, setShowCreateModal] = useState(false);
   const [modalData, setModalData] = useState(null);
   const [donationAmount, setDonationAmout] = useState(0);
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const [goal, setGoal] = useState('');
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -57,10 +61,19 @@ const ProjectList = () => {
     console.log('handleSubmitDonation', data)
   }
 
+  const handleProjectCreation = (data) => {
+    console.log('handleProjectCreation', data)
+  }
+
   return (
     <>
       <div className="max-w-md mx-auto mt-10 md:max-w-4xl">
-        <h2 className="text-2xl font-bold mb-4">Available Projects</h2>
+        <div className='flex justify-between mb-4'>
+          <h2 className="text-2xl font-bold">All Projects</h2>
+          <button type="button" className="w-full rounded-md bg-gray-200 px-3 text-sm font-semibold text-gray-800 shadow-sm hover:bg-gray-100 sm:ml-3 sm:w-auto"
+            onClick={() => setShowCreateModal(true)}
+          >Create Project</button>
+        </div>
         {projects.map((project) => (
           <ProjectItem key={project.innovator}
             projectData={project}
@@ -71,11 +84,11 @@ const ProjectList = () => {
       {
         showModal &&
         <Modal
+          title={`Thank you for your donation to : ${modalData?.title}`}
           onClose={() => setShowModal(false)}
           onSuccess={handleSubmitDonation}
         >
           <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
-            <h3 className="text-base font-semibold leading-6 text-gray-900" id="modal-title">Thank you for your donation to : {modalData?.title}</h3>
             <div className="mt-2">
               <p className="text-sm text-gray-500">Please enter the amount you would like to donate.</p>
             </div>
@@ -85,6 +98,50 @@ const ProjectList = () => {
               value={donationAmount}
               onChange={(e) => setDonationAmout(e.target.value)}
             />
+          </div>
+        </Modal>
+      }
+
+      {
+        showCreateModal &&
+        <Modal
+          title='Create a new project'
+          onClose={() => setShowCreateModal(false)}
+          onSuccess={handleProjectCreation}
+        >
+          <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
+
+            <div className="w-full flex flex-col items-center">
+              <div className="my-4" >
+                <label className="block text-gray-700">Project Title</label>
+                <input
+                  type="text"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  className="w-full px-3 py-2 border rounded"
+                  required
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-gray-700">Description</label>
+                <textarea
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  className="w-full px-3 py-2 border rounded"
+                  required
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-gray-700">Funding Goal</label>
+                <input
+                  type="number"
+                  value={goal}
+                  onChange={(e) => setGoal(e.target.value)}
+                  className="w-full px-3 py-2 border rounded"
+                  required
+                />
+              </div>
+            </div>
           </div>
         </Modal>
       }

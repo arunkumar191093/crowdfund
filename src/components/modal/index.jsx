@@ -1,4 +1,5 @@
 const Modal = ({
+  title = "",
   onClose,
   onSuccess,
   children
@@ -12,6 +13,10 @@ const Modal = ({
 
           <div className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all data-[closed]:translate-y-4 data-[closed]:opacity-0 data-[enter]:duration-300 data-[leave]:duration-200 data-[enter]:ease-out data-[leave]:ease-in data-[closed]:sm:translate-y-0 data-[closed]:sm:scale-95 sm:my-8 sm:w-full sm:max-w-lg">
             <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+              {
+                !!title &&
+                <h3 className="text-base font-semibold leading-6 text-gray-900 pb-2 border-b-[0.5px]" id="modal-title">{title}</h3>
+              }
               <div className="sm:flex sm:items-start">
                 {children}
               </div>

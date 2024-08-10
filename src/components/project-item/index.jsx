@@ -21,8 +21,8 @@ const ProjectItem = ({
   return (
     <div className="border p-4 mb-4 rounded cursor-pointer hover:shadow-xl">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 ">
-        <img src={randomImg} alt="project image" />
-        <div className="col-span-2 p-4 border rounded-md border-gray-200">
+        <img src={randomImg} alt={`project - ${projectData.title}`} />
+        <div className="col-span-2 p-4 border-[0.5px] rounded-md border-gray-200">
           <h3 className="text-xl font-bold">{projectData.title}</h3>
           <p>{projectData.description}</p>
           <div className='mt-4'>

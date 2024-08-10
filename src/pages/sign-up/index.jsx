@@ -1,13 +1,14 @@
 import { useContext, useState } from "react";
 import { AuthContext } from '../../context/auth-context';
-import { Navigate, Link } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import InputText from '../../components/input-text';
 
 
-const LoginPage = () => {
+const SignUpPage = () => {
 
   const authCtx = useContext(AuthContext);
   const [email, setEmail] = useState("");
+  const [fullname, setFullname] = useState("");
   const [password, setPassword] = useState("");
 
   const handleLogin = () => {
@@ -24,11 +25,19 @@ const LoginPage = () => {
         <div className="max-w-md w-full">
           <div>
             <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-              Log in to your account
+              Create your account
             </h2>
           </div>
           <form className="mt-8" onSubmit={handleLogin}>
             <div className="rounded-md shadow-sm">
+              <InputText
+                label="Full Name"
+                placeholder="Enter Full Name"
+                type="text"
+                isRequired
+                value={fullname}
+                onChange={setFullname}
+              />
               <InputText
                 label="Username/Email"
                 placeholder="Enter Username/Email"
@@ -48,26 +57,17 @@ const LoginPage = () => {
               />
             </div>
 
-            <div className="flex items-center justify-between my-4">
-              <div className="text-sm font-medium text-indigo-600 hover:text-indigo-500">
-                Forgot your password?
-              </div>
-            </div>
-
             <button
               type="submit"
               className="w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-gray-700 hover:bg-gray-600 "
             >
-              Log in
+              Create
             </button>
           </form>
-          <Link to="/sign-up" className="flex self-center justify-center mt-4 p-2 text-sm text-center font-medium text-indigo-600 hover:text-indigo-500">
-            Create account
-          </Link>
         </div>
       </div>
     </div>
   )
 }
 
-export default LoginPage;
+export default SignUpPage;
