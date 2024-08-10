@@ -4,6 +4,7 @@ import { UserContext } from '../../context/user-context';
 import { Navigate, Link } from "react-router-dom";
 import InputText from '../../components/input-box';
 import { loginUser } from '../../services/user-service';
+import { useShowSnackbar } from '../../utils/helper';
 
 const LoginPage = () => {
 
@@ -11,6 +12,8 @@ const LoginPage = () => {
   const userCtx = useContext(UserContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const { openSnackbar } = useShowSnackbar();
+  const { openSnackbar: successSnackbar } = useShowSnackbar(true);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -23,9 +26,13 @@ const LoginPage = () => {
       if (response.status === 200) {
         authCtx.handleLogin(response?.userData);
         userCtx.updateUserCtx(response?.userData);
+        successSnackbar(response?.message);
+      } else {
+        openSnackbar(response?.error || 'Something went wrong.')
       }
     } catch (error) {
       console.error("Error while login", error)
+      openSnackbar(error?.message || 'Something went wrong.')
     }
   }
 

@@ -1,6 +1,7 @@
 import { useContext } from 'react';
 import { AuthContext } from '../context/auth-context';
 import { UserContext } from '../context/user-context';
+import { useSnackbar } from 'react-simple-snackbar'
 
 export const useIsLoggedIn = () => {
   const authCtx = useContext(AuthContext);
@@ -10,6 +11,28 @@ export const useIsLoggedIn = () => {
 export const useGetUserData = () => {
   const userCtx = useContext(UserContext);
   return userCtx?.userData;
+}
+
+export const useShowSnackbar = (isSuccess) => {
+  const options = {
+    position: 'top-center',
+    style: {
+      backgroundColor: 'white',
+      border: isSuccess ? '1px solid green' : '1px solid red',
+      color: isSuccess ? 'green' : 'red',
+      fontSize: '14px',
+      textAlign: 'center',
+    },
+    closeStyle: {
+      color: isSuccess ? 'green' : 'red',
+      fontSize: '16px',
+    },
+  }
+  const [openSnackbar, closeSnackbar] = useSnackbar(options);
+  return {
+    openSnackbar,
+    closeSnackbar
+  }
 }
 
 export const setStorage = (key, value) => {
@@ -23,4 +46,13 @@ export const getStorage = (key) => {
   } catch (error) {
     return null;
   }
+}
+
+export const validateDonation = (amount) => {
+  return !isNaN(amount) && amount <= 0
+}
+
+export const validateProjectData = (projectData) => {
+  const { title, desc, goal } = projectData;
+  return title && desc && goal;
 }

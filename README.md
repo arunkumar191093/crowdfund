@@ -86,3 +86,21 @@ Project
   - innovator
   - archived
 
+
+Future scopes: 
+ - Along with donations, we can show to total no. of users who donated so far
+ - Can show top 5 donations and the name ( either Anonymous or if someone provided their name)
+ - Can have carousel and videos of the projects
+ - Can have more details about the project when donator click on the project title
+ - Can have login via gmail 
+ - have end date for every project enabled for donation
+ - Make description in create project as rich text editor
+
+ENV Values
+```
+DB_URI=mongodb+srv://<username>:<password>@crownfund-app.iepdj.mongodb.net/?retryWrites=true&w=majority&appName=crownfund-app&ssl=true
+USER_NAME=aron91jones
+PASSWORD=Crowdfunding12345
+DB_NAME=crowdFund
+REACT_APP_API_URL=http://localhost:3002
+```

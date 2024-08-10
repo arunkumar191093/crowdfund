@@ -23,13 +23,11 @@ export const AuthContextProvider = ({
   }, []);
 
   const handleLogin = (userData) => {
-    console.log('handle login clicked')
     setIsUserLoggedIn(true);
     setStorage('user-data', userData);
   }
 
   const handleLogout = () => {
-    console.log('handle logout clicked')
     localStorage.clear();
     setIsUserLoggedIn(false);
     navigate('/')

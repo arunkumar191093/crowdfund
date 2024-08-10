@@ -4,6 +4,9 @@ import { getProjectForUser, createProject } from '../../services/project-service
 import ProjectItem from '../../components/project-item';
 import InputText from '../../components/input-box';
 import Modal from '../../components/modal';
+import SkeletonLoader from '../../components/skeleton-loader';
+import { useShowSnackbar, validateProjectData } from '../../utils/helper';
+import { errorMessages } from '../../utils/error-constants';
 
 const MyProjects = () => {
   const [projects, setProjects] = useState([]);
@@ -12,11 +15,26 @@ const MyProjects = () => {
   const [description, setDescription] = useState('');
   const [goal, setGoal] = useState('');
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const [loading, setIsloading] = useState(false);
+  const { openSnackbar } = useShowSnackbar();
+  const { openSnackbar: successSnackbar } = useShowSnackbar(true);
 
   const fetchMyProjects = async () => {
-    const response = await getProjectForUser(userData?._id);
-    if (response.status === 200) {
-      setProjects(response?.projects);
+    try {
+      setIsloading(true);
+      const response = await getProjectForUser(userData?._id);
+      setTimeout(() => {
+        setIsloading(false);
+        if (response.status === 200) {
+          setProjects(response?.projects);
+        } else {
+          setProjects([]);
+          openSnackbar(response?.error || 'Something went wrong.')
+        }
+      }, 1000)
+    } catch (error) {
+      setIsloading(false);
+      openSnackbar(error?.message || 'Something went wrong.')
     }
   };
 
@@ -33,13 +51,22 @@ const MyProjects = () => {
         goal,
         innovator: userData?._id
       }
-      const response = await createProject(req);
-      if (response.status === 201) {
-        resetProjectForm();
-        fetchMyProjects();
+      if (validateProjectData(req)) {
+        const response = await createProject(req);
+        if (response.status === 201) {
+          resetProjectForm();
+          fetchMyProjects();
+          successSnackbar(response?.message);
+        } else {
+          openSnackbar(response?.error || 'Something went wrong.')
+        }
+      } else {
+        openSnackbar(errorMessages.MISSING_PROJECT_DATA)
       }
     } catch (error) {
+      setIsloading(false);
       console.error("Error while creating project")
+      openSnackbar(error?.message || 'Error while creating project')
     }
   }
 
@@ -52,15 +79,32 @@ const MyProjects = () => {
 
   return (
     <>
-      <div className="max-w-md mx-auto mt-10 md:max-w-4xl">
-        <div className='flex justify-between mb-4'>
+      <div className="mx-6 mt-10 pb-24">
+        <div className='flex flex-col sm:flex-row justify-between mb-4'>
           <h2 className="text-2xl font-bold">My Projects</h2>
-          <button type="button" className="w-full rounded-md bg-gray-200 px-3 text-sm font-semibold text-gray-800 shadow-sm hover:bg-gray-100 sm:ml-3 sm:w-auto"
+          <button type="button" className="rounded-md bg-gray-200 px-3 py-2 text-sm font-semibold text-gray-800 shadow-sm hover:bg-gray-100 sm:ml-3 sm:w-auto"
             onClick={() => setShowCreateModal(true)}
-          >Create Project</button>
+          >Create Project
+          </button>
+        </div>
+        <div className="grid grid-cols-3 gap-4">
+          {
+            loading &&
+            <>
+              <SkeletonLoader />
+              <SkeletonLoader />
+              <SkeletonLoader />
+            </>
+          }
+          {!loading && projects.map((project) => (
+            <ProjectItem key={project._id}
+              isOwnProject={true}
+              projectData={project}
+            />
+          ))}
         </div>
         {
-          !projects?.length &&
+          !loading && !projects?.length &&
           <div className="flex flex-col items-center justify-center m-24">
             <h1 className="font-extrabold text-6xl">Howdy!</h1>
             <p className="font-medium text-3xl">
@@ -71,12 +115,7 @@ const MyProjects = () => {
             </p>
           </div>
         }
-        {projects.map((project) => (
-          <ProjectItem key={project._id}
-            isOwnProject={true}
-            projectData={project}
-          />
-        ))}
+
       </div>
       {
         showCreateModal &&

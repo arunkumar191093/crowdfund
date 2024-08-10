@@ -12,12 +12,12 @@ const ProgressBar = ({
 
   useEffect(() => {
     calculateWidth();
-  }, [])
+  }, [currentValue])
 
   return (
     <div className="my-2">
       <div className="w-full bg-gray-200 rounded-full">
-        <div className={`bg-green-700 text-xs font-medium text-white text-center p-1 leading-none rounded-full`}
+        <div className={`bg-gray-500 text-xs font-medium text-white text-center p-1 leading-none rounded-full`}
           style={{ width: `${width}%` }}>
           {width}%
         </div>

@@ -1,6 +1,6 @@
 const UserModel = require('./db/models/user-model');
 const ProjectModel = require('./db/models/project-model');
-const { handleErrors, isPasswordValid } = require('./utils/helper');
+const { handleErrors, isPasswordValid, sortProjects } = require('./utils/helper');
 
 const routes = (app) => {
 
@@ -11,6 +11,7 @@ const routes = (app) => {
       await user.save();
       res.status(201).send({
         status: 201,
+        message: 'Account created successfully',
         user
       });
     } catch (error) {
@@ -42,9 +43,10 @@ const routes = (app) => {
 
   app.get('/api/projects', async (req, res) => {
     const projects = await ProjectModel.find();
+    const sortedProjects = sortProjects(projects);
     res.send({
       status: 200,
-      projects
+      projects: sortedProjects
     });
   });
 
@@ -55,6 +57,7 @@ const routes = (app) => {
       await project.save();
       res.status(201).send({
         status: 201,
+        message: 'Project created successfully',
         project
       });
     } catch (error) {
@@ -67,9 +70,10 @@ const routes = (app) => {
     try {
       const { userId } = req.params;
       const projects = await ProjectModel.find({ innovator: userId });
+      const sortedProjects = sortProjects(projects);
       res.status(200).send({
         status: 200,
-        projects
+        projects: sortedProjects
       });
     } catch (error) {
       handleErrors(res, error);
@@ -93,6 +97,7 @@ const routes = (app) => {
       await project.save();
       res.send({
         status: 200,
+        message: 'Donation added successfully',
         project
       });
     } catch (error) {

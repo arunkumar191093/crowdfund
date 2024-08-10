@@ -2,22 +2,43 @@ import React, { useEffect, useState } from 'react';
 import ProjectItem from '../../components/project-item';
 import Modal from '../../components/modal';
 import { getAllProjects, updateDonation } from '../../services/project-service';
-import { useGetUserData } from '../../utils/helper';
+import {
+  useGetUserData,
+  useShowSnackbar,
+  validateDonation
+} from '../../utils/helper';
 import InputText from '../../components/input-box';
+import SkeletonLoader from '../../components/skeleton-loader';
+import { errorMessages } from '../../utils/error-constants';
 
 const ProjectList = () => {
   const [projects, setProjects] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [modalData, setModalData] = useState(null);
+  const [loading, setIsloading] = useState(false);
   const [donationAmount, setDonationAmout] = useState(0);
-  
+
   const userData = useGetUserData();
+  const { openSnackbar } = useShowSnackbar();
+  const { openSnackbar: successSnackbar } = useShowSnackbar(true);
 
   const fetchProjects = async () => {
-    const response = await getAllProjects();
-    console.log('response', response)
-    if (response.status === 200) {
-      setProjects(response?.projects);
+    try {
+      setIsloading(true);
+      const response = await getAllProjects();
+      // Setting this timeout just to show some lateny and loader
+      setTimeout(() => {
+        setIsloading(false);
+        if (response.status === 200) {
+          setProjects(response?.projects);
+        } else {
+          setProjects([]);
+          openSnackbar(response?.error || 'Something went wrong while fetching projects')
+        }
+      }, 1000)
+    } catch (error) {
+      setIsloading(false);
+      openSnackbar(error?.message || 'Something went wrong while fetching projects')
     }
   };
 
@@ -28,43 +49,61 @@ const ProjectList = () => {
   const handleDonate = async (data) => {
     setShowModal(prev => !prev);
     setModalData(data);
-    console.log('donate modal', data)
   };
 
   const handleSubmitDonation = async (e) => {
     e.preventDefault();
     try {
-      const response = await updateDonation(modalData?._id, donationAmount);
-      if (response.status === 200) {
-        setShowModal(false);
-        setModalData(null);
-        setDonationAmout(0);
-        fetchProjects();
+      if (validateDonation()) {
+        const response = await updateDonation(modalData?._id, donationAmount);
+        if (response.status === 200) {
+          setShowModal(false);
+          setModalData(null);
+          setDonationAmout(0);
+          fetchProjects();
+          successSnackbar(response?.message);
+        } else {
+          openSnackbar(response?.error || 'Something went wrong while fetching projects')
+        }
+      } else {
+        openSnackbar(errorMessages.INVALID_DONATION)
       }
     } catch (error) {
+      setIsloading(false);
       console.error("Error while updating donation of project")
+      openSnackbar(error?.message || 'Something went wrong while fetching projects')
     }
   }
 
   return (
     <>
-      <div className="max-w-md mx-auto mt-10 md:max-w-4xl">
+      <div className="mx-6 mt-10 pb-24">
         <div className='flex justify-between mb-4'>
           <h2 className="text-2xl font-bold">All Projects</h2>
-          
         </div>
-        {projects.map((project) => (
-          <ProjectItem key={project._id}
-            projectData={project}
-            isOwnProject={userData?._id === project.innovator}
-            onDonate={handleDonate}
-          />
-        ))}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+          {
+            loading &&
+            <>
+              <SkeletonLoader />
+              <SkeletonLoader />
+              <SkeletonLoader />
+            </>
+          }
+          {!loading && projects?.map((project) => (
+            <ProjectItem key={project._id}
+              projectData={project}
+              isOwnProject={userData?._id === project.innovator}
+              onDonate={handleDonate}
+            />
+          ))}
+        </div>
       </div>
       {
         showModal &&
         <Modal
           title={`Thank you for your donation to : ${modalData?.title}`}
+          disableSuccess={donationAmount <= 0}
           onClose={() => setShowModal(false)}
           onSuccess={handleSubmitDonation}
         >
@@ -77,6 +116,7 @@ const ProjectList = () => {
               type="number"
               inputClass="w-full my-4 px-3 py-2 border rounded"
               isRequired
+              dis
               value={donationAmount}
               onChange={setDonationAmout}
             />

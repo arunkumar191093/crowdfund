@@ -2,12 +2,15 @@ import { useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import InputText from '../../components/input-box';
 import { signUpUser } from '../../services/user-service';
+import { useShowSnackbar } from '../../utils/helper';
 
 const SignUpPage = () => {
   const [email, setEmail] = useState("");
   const [fullname, setFullname] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const { openSnackbar } = useShowSnackbar();
+  const { openSnackbar: successSnackbar } = useShowSnackbar(true);
 
   const handleCreateUser = async (e) => {
     e.preventDefault();
@@ -21,9 +24,13 @@ const SignUpPage = () => {
       const response = await signUpUser(req);
       if (response.status === 201) {
         navigate('/login')
+        successSnackbar(response?.message);
+      }else{
+        openSnackbar(response?.error || 'Something went wrong.')
       }
     } catch (error) {
       console.error("Error while sign up")
+      openSnackbar(error?.message || 'Something went wrong.')
     }
   }
 

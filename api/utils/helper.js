@@ -31,7 +31,14 @@ const isPasswordValid = (passFromDB, currentPass) => {
   return passFromDB === currentPass;
 }
 
+const sortProjects = (allProjects) => {
+  let archived = allProjects.filter(proj => proj.archived);
+  let others = allProjects.filter(proj => !proj.archived);
+  return [...others, ...archived]
+}
+
 module.exports = {
   handleErrors,
-  isPasswordValid
+  isPasswordValid,
+  sortProjects
 }
