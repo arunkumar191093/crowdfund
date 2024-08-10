@@ -1,7 +1,6 @@
 import { API_ENDPOINT } from '../utils/constants';
 
 export const getAllProjects = () => {
-  console.log('API_ENDPOINT', API_ENDPOINT)
   return fetch(`${API_ENDPOINT}/projects`, {
     method: 'GET',
   }).then(r => r.json())

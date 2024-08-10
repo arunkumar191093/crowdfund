@@ -5,7 +5,6 @@ import { Navigate, Link } from "react-router-dom";
 import InputText from '../../components/input-box';
 import { loginUser } from '../../services/user-service';
 
-
 const LoginPage = () => {
 
   const authCtx = useContext(AuthContext);
@@ -22,7 +21,7 @@ const LoginPage = () => {
       }
       const response = await loginUser(req);
       if (response.status === 200) {
-        authCtx.handleLogin();
+        authCtx.handleLogin(response?.userData);
         userCtx.updateUserCtx(response?.userData);
       }
     } catch (error) {

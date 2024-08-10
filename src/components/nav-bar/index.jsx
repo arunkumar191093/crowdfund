@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { Link } from 'react-router-dom';
+import { NavLink, Link } from 'react-router-dom';
 import PopoverMenu from '../popover-menu';
 import { AuthContext } from '../../context/auth-context';
 import { UserContext } from '../../context/user-context';
@@ -82,13 +82,15 @@ const NavBar = () => {
 
                       if (!isLoggedIn && route.isAuthRequired) return null;
 
-                      return (<Link
+                      return (<NavLink
                         key={route.url}
                         to={route.url}
-                        className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                        className={({ isActive }) =>
+                          `${isActive ? 'bg-gray-700' : ''} text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium`
+                        }
                       >
                         {route.label}
-                      </Link>)
+                      </NavLink>)
                     }
                     )
                   }

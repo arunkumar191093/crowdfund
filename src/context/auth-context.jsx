@@ -1,5 +1,6 @@
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
+import { setStorage, getStorage } from '../utils/helper';
 
 const initialData = {
   isLoggedIn: false,
@@ -14,13 +15,22 @@ export const AuthContextProvider = ({
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
   const navigate = useNavigate();
 
-  const handleLogin = () => {
+  useEffect(() => {
+    let userInfo = getStorage('user-data')
+    if (userInfo) {
+      setIsUserLoggedIn(true);
+    }
+  }, []);
+
+  const handleLogin = (userData) => {
     console.log('handle login clicked')
     setIsUserLoggedIn(true);
+    setStorage('user-data', userData);
   }
 
   const handleLogout = () => {
     console.log('handle logout clicked')
+    localStorage.clear();
     setIsUserLoggedIn(false);
     navigate('/')
   }

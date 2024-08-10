@@ -4,6 +4,7 @@ import ProgressBar from '../progress-bar';
 
 const ProjectItem = ({
   projectData,
+  isOwnProject = false,
   onDonate = () => { }
 }) => {
 
@@ -31,12 +32,15 @@ const ProjectItem = ({
               currentValue={projectData.raised}
               maxValue={projectData.goal} />
           </div>
-          <button
-            onClick={() => onDonate(projectData)}
-            className="bg-green-500 text-white px-4 py-2 rounded mt-2"
-          >
-            Donate
-          </button>
+          {
+            !isOwnProject &&
+            <button
+              onClick={() => onDonate(projectData)}
+              className="bg-green-500 text-white px-4 py-2 rounded mt-2"
+            >
+              Donate
+            </button>
+          }
 
         </div>
       </div>

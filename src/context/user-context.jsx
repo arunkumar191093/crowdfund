@@ -1,4 +1,5 @@
-import { createContext, useState } from "react";
+import { createContext, useEffect, useState } from "react";
+import { setStorage, getStorage } from '../utils/helper';
 
 const initialData = {
   userData: null,
@@ -12,8 +13,17 @@ export const UserContextProvider = ({
 }) => {
   const [userInfo, setUserInfo] = useState(null);
 
+  useEffect(() => {
+    let userInfo = getStorage('user-data')
+    if (userInfo) {
+      setUserInfo({ ...userInfo });
+    }
+  }, []);
+
   const updateUserInfo = (data) => {
-    setUserInfo({ ...data });
+    let userData = { ...data };
+    setUserInfo(userData);
+    setStorage('user-data', userData)
   }
 
   return (

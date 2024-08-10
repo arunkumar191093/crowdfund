@@ -17,7 +17,7 @@ const Modal = ({
                 !!title &&
                 <h3 className="text-base font-semibold leading-6 text-gray-900 pb-2 border-b-[0.5px]" id="modal-title">{title}</h3>
               }
-              <div className="sm:flex sm:items-start">
+              <div>
                 {children}
               </div>
             </div>
