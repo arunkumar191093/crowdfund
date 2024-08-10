@@ -8,7 +8,6 @@ const initialData = {
 
 export const AuthContext = createContext(initialData);
 
-
 export const AuthContextProvider = ({
   children
 }) => {

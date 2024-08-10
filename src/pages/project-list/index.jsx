@@ -1,28 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import ProjectItem from '../../components/project-item';
 import Modal from '../../components/modal';
-
-const mockData = [
-  {
-    title: 'Project 1',
-    description: 'Project 1 desc',
-    goal: 1000,
-    raised: 500,
-    innovator: 'user id',
-    archived: false
-  },
-  {
-    title: 'Project 2',
-    description: 'Project 2 desc',
-    goal: 1001,
-    raised: 750,
-    innovator: 'user id 2',
-    archived: false
-  }
-]
+import { getAllProjects, createProject } from '../../services/project-service';
+import { UserContext } from '../../context/user-context';
 
 const ProjectList = () => {
-  const [projects, setProjects] = useState(mockData);
+  const [projects, setProjects] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [modalData, setModalData] = useState(null);
@@ -30,13 +13,43 @@ const ProjectList = () => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [goal, setGoal] = useState('');
+  const userCtx = useContext(UserContext);
+
+  const fetchProjects = async () => {
+    const response = await getAllProjects();
+    console.log('response', response)
+    if (response.status === 200) {
+      setProjects(response?.projects);
+    }
+  };
+
+  const handleCreateProject = async (e) => {
+    e.preventDefault();
+    try {
+      const req = {
+        title,
+        description,
+        goal,
+        innovator: userCtx?.userData._id
+      }
+      const response = await createProject(req);
+      if (response.status === 201) {
+        resetProjectForm();
+        fetchProjects();
+      }
+    } catch (error) {
+      console.error("Error while sign up")
+    }
+  }
+
+  const resetProjectForm = () => {
+    setTitle('');
+    setDescription('');
+    setGoal('');
+    setShowCreateModal(false);
+  }
 
   useEffect(() => {
-    const fetchProjects = async () => {
-      const response = await fetch('/api/projects');
-      const data = await response.json();
-      setProjects(data);
-    };
     fetchProjects();
   }, []);
 
@@ -61,10 +74,6 @@ const ProjectList = () => {
     console.log('handleSubmitDonation', data)
   }
 
-  const handleProjectCreation = (data) => {
-    console.log('handleProjectCreation', data)
-  }
-
   return (
     <>
       <div className="max-w-md mx-auto mt-10 md:max-w-4xl">
@@ -75,7 +84,7 @@ const ProjectList = () => {
           >Create Project</button>
         </div>
         {projects.map((project) => (
-          <ProjectItem key={project.innovator}
+          <ProjectItem key={project._id}
             projectData={project}
             onDonate={handleDonate}
           />
@@ -107,10 +116,9 @@ const ProjectList = () => {
         <Modal
           title='Create a new project'
           onClose={() => setShowCreateModal(false)}
-          onSuccess={handleProjectCreation}
+          onSuccess={handleCreateProject}
         >
           <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
-
             <div className="w-full flex flex-col items-center">
               <div className="my-4" >
                 <label className="block text-gray-700">Project Title</label>

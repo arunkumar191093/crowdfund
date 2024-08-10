@@ -2,6 +2,7 @@ import { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import PopoverMenu from '../popover-menu';
 import { AuthContext } from '../../context/auth-context';
+import { UserContext } from '../../context/user-context';
 import { ChevronDownIcon } from '@heroicons/react/24/solid'
 
 const routes = [
@@ -20,6 +21,7 @@ const routes = [
 const NavBar = () => {
 
   const { isLoggedIn, handleLogout } = useContext(AuthContext);
+  const userCtx = useContext(UserContext);
 
   return (
     <nav className="bg-gray-800">
@@ -98,7 +100,7 @@ const NavBar = () => {
                 <div>
                   <PopoverMenu mainButtonText={
                     <div className='flex items-center'>
-                      <p className='mr-2'>Arun Kumar</p>
+                      <p className='mr-2'>{userCtx?.userData?.fullname}</p>
                       <ChevronDownIcon className="h-4 w-4" />
                     </div>
                   }>

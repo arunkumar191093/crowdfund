@@ -1,17 +1,33 @@
 import { useContext, useState } from "react";
 import { AuthContext } from '../../context/auth-context';
+import { UserContext } from '../../context/user-context';
 import { Navigate, Link } from "react-router-dom";
-import InputText from '../../components/input-text';
+import InputText from '../../components/input-box';
+import { loginUser } from '../../services/user-service';
 
 
 const LoginPage = () => {
 
   const authCtx = useContext(AuthContext);
+  const userCtx = useContext(UserContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleLogin = () => {
-    authCtx.handleLogin();
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    try {
+      const req = {
+        email,
+        password
+      }
+      const response = await loginUser(req);
+      if (response.status === 200) {
+        authCtx.handleLogin();
+        userCtx.updateUserCtx(response?.userData);
+      }
+    } catch (error) {
+      console.error("Error while login", error)
+    }
   }
 
   if (authCtx.isLoggedIn) {

@@ -1,22 +1,30 @@
-import { useContext, useState } from "react";
-import { AuthContext } from '../../context/auth-context';
-import { Navigate } from "react-router-dom";
-import InputText from '../../components/input-text';
-
+import { useState } from "react";
+import { useNavigate } from 'react-router-dom';
+import InputText from '../../components/input-box';
+import { signUpUser } from '../../services/user-service';
 
 const SignUpPage = () => {
-
-  const authCtx = useContext(AuthContext);
   const [email, setEmail] = useState("");
   const [fullname, setFullname] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
-  const handleLogin = () => {
-    authCtx.handleLogin();
-  }
-
-  if (authCtx.isLoggedIn) {
-    return <Navigate to="/projects" replace={true} />
+  const handleCreateUser = async (e) => {
+    e.preventDefault();
+    try {
+      const req = {
+        email,
+        fullname,
+        role: 'innovator',
+        password
+      }
+      const response = await signUpUser(req);
+      if (response.status === 201) {
+        navigate('/login')
+      }
+    } catch (error) {
+      console.error("Error while sign up")
+    }
   }
 
   return (
@@ -28,7 +36,7 @@ const SignUpPage = () => {
               Create your account
             </h2>
           </div>
-          <form className="mt-8" onSubmit={handleLogin}>
+          <form className="mt-8" onSubmit={handleCreateUser}>
             <div className="rounded-md shadow-sm">
               <InputText
                 label="Full Name"

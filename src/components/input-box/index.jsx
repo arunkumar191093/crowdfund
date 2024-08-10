@@ -3,6 +3,7 @@ const InputText = ({
   placeholder = "",
   onChange = () => { },
   type = "text",
+  minValue = 0,
   isRequired = false,
   value,
 }) => {
