@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import { AuthContext } from '../context/auth-context';
 import { UserContext } from '../context/user-context';
-import { useSnackbar } from 'react-simple-snackbar'
+import { useSnackbar } from 'react-simple-snackbar';
 
 export const useIsLoggedIn = () => {
   const authCtx = useContext(AuthContext);
@@ -49,7 +49,7 @@ export const getStorage = (key) => {
 }
 
 export const validateDonation = (amount) => {
-  return !isNaN(amount) && amount <= 0
+  return !isNaN(amount) && amount >= 0
 }
 
 export const validateProjectData = (projectData) => {

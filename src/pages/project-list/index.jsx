@@ -55,7 +55,7 @@ const ProjectList = () => {
   const handleSubmitDonation = async (e) => {
     e.preventDefault();
     try {
-      if (validateDonation()) {
+      if (validateDonation(donationAmount)) {
         const response = await updateDonation(modalData?._id, donationAmount);
         if (response.status === 200) {
           setShowModal(false);

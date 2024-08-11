@@ -1,74 +1,58 @@
-# Getting Started with Create React App
+## Crowdfunding App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This application will be used by innovator (that post their projects) and public donors (that fund the projects)
+Innovators can create projects, request contributions to their projects, and also browse their previous projects.
+Public donors are able to browse projects from innovators and contribute to fund the projects. When donation on a project reaches requested amount, the project is archived and donation is transferred to innovator
 
-## Available Scripts
+In order to run the application locally, follow below steps - 
 
-In the project directory, you can run:
+## Installation
 
-### `npm start`
+After cloning the project run the below command to install
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+```bash
+  npm install
+```
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+Before running the code, there are few properites that needs to be available for the code.
+Create a `.env` file and add below properties with appropriate values.
 
-### `npm test`
+```
+DB_URI=mongodb+srv://<username>:<password>@crownfund-app.iepdj.mongodb.net/?retryWrites=true&w=majority&appName=crownfund-app&ssl=true
+USER_NAME=aron91jones
+PASSWORD=Crowdfunding12345
+DB_NAME=crowdFund
+REACT_APP_API_URL=http://localhost:3002
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-### `npm run build`
+    
+## Run Locally
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+This is a monolith repo holding both client and server code.
+Open two separate terminals for client and server code and run below commands
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Clone the project
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Go to the project directory
 
-### `npm run eject`
+Install dependencies
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+```bash
+  npm install
+```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Start the server
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+For backend: 
+```bash
+  npm run server-start
+```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
-
+For front-end code: 
+```bash
+  npm run start
+```
 
 
 Schemas/Tables
@@ -95,12 +79,3 @@ Future scopes:
  - Can have login via gmail 
  - have end date for every project enabled for donation
  - Make description in create project as rich text editor
-
-ENV Values
-```
-DB_URI=mongodb+srv://<username>:<password>@crownfund-app.iepdj.mongodb.net/?retryWrites=true&w=majority&appName=crownfund-app&ssl=true
-USER_NAME=aron91jones
-PASSWORD=Crowdfunding12345
-DB_NAME=crowdFund
-REACT_APP_API_URL=http://localhost:3002
-```

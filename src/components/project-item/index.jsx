@@ -35,6 +35,7 @@ const ProjectItem = ({
             (!isOwnProject && !projectData.archived) &&
             <button
               onClick={() => onDonate(projectData)}
+              data-testid="donate-btn"
               className="bg-gray-600 w-full text-white px-4 py-2 rounded mt-2"
             >
               Donate
