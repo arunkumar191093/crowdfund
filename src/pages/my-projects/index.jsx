@@ -1,12 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, lazy, Suspense } from 'react';
 import { useGetUserData } from '../../utils/helper';
 import { getProjectForUser, createProject } from '../../services/project-service';
 import ProjectItem from '../../components/project-item';
-import InputText from '../../components/input-box';
-import Modal from '../../components/modal';
 import SkeletonLoader from '../../components/skeleton-loader';
 import { useShowSnackbar, validateProjectData } from '../../utils/helper';
 import { errorMessages } from '../../utils/error-constants';
+import imgData from '../../mock-images.json';
+
+const Modal = lazy(() => import('../../components/modal'));
+const InputText = lazy(() => import('../../components/input-box'));
 
 const MyProjects = () => {
   const [projects, setProjects] = useState([]);
@@ -42,6 +44,11 @@ const MyProjects = () => {
     fetchMyProjects();
   }, []);
 
+  const getRandomImage = () => {
+    const randomIdx = Math.floor(Math.random() * 30)
+    return imgData[randomIdx];
+  }
+
   const handleCreateProject = async (e) => {
     e.preventDefault();
     try {
@@ -49,7 +56,8 @@ const MyProjects = () => {
         title,
         description,
         goal,
-        innovator: userData?._id
+        innovator: userData?._id,
+        imageUrl: getRandomImage()
       }
       if (validateProjectData(req)) {
         const response = await createProject(req);
@@ -79,15 +87,15 @@ const MyProjects = () => {
 
   return (
     <>
-      <div className="mx-6 mt-10 pb-24">
+      <div className="mx-16 mt-10 pb-24">
         <div className='flex flex-col sm:flex-row justify-between mb-4'>
           <h2 className="text-2xl font-bold">My Projects</h2>
-          <button type="button" className="rounded-md bg-gray-200 px-3 py-2 text-sm font-semibold text-gray-800 shadow-sm hover:bg-gray-100 sm:ml-3 sm:w-auto"
+          <button type="button" className="rounded-md bg-gray-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-gray-400 sm:ml-3 sm:w-auto"
             onClick={() => setShowCreateModal(true)}
           >Create Project
           </button>
         </div>
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
           {
             loading &&
             <>
@@ -119,42 +127,44 @@ const MyProjects = () => {
       </div>
       {
         showCreateModal &&
-        <Modal
-          title='Create a new project'
-          onClose={() => setShowCreateModal(false)}
-          onSuccess={handleCreateProject}
-        >
-          <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
-            <div className="w-full flex flex-col">
-              <InputText
-                label="Project Title"
-                placeholder="Enter project title"
-                inputClass="w-full px-3 py-2 border rounded"
-                isRequired
-                value={title}
-                onChange={setTitle}
-              />
-              <div className="my-2">
-                <label className="font-medium">Description</label>
-                <textarea
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  className="rounded-md block w-full my-2 px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 sm:text-sm"
-                  required
+        <Suspense fallback={<div>Please wait ...</div>}>
+          <Modal
+            title='Create a new project'
+            onClose={() => setShowCreateModal(false)}
+            onSuccess={handleCreateProject}
+          >
+            <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
+              <div className="w-full flex flex-col">
+                <InputText
+                  label="Project Title"
+                  placeholder="Enter project title"
+                  inputClass="w-full px-3 py-2 border rounded"
+                  isRequired
+                  value={title}
+                  onChange={setTitle}
+                />
+                <div className="my-2">
+                  <label className="font-medium">Description</label>
+                  <textarea
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    className="rounded-md block w-full my-2 px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 sm:text-sm"
+                    required
+                  />
+                </div>
+                <InputText
+                  label="Funding Goal"
+                  type='number'
+                  placeholder="Enter funding goal"
+                  inputClass="w-full px-3 py-2 border rounded"
+                  isRequired
+                  value={goal}
+                  onChange={setGoal}
                 />
               </div>
-              <InputText
-                label="Funding Goal"
-                type='number'
-                placeholder="Enter funding goal"
-                inputClass="w-full px-3 py-2 border rounded"
-                isRequired
-                value={goal}
-                onChange={setGoal}
-              />
             </div>
-          </div>
-        </Modal>
+          </Modal>
+        </Suspense>
       }
     </>
   );

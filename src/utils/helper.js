@@ -53,6 +53,6 @@ export const validateDonation = (amount) => {
 }
 
 export const validateProjectData = (projectData) => {
-  const { title, desc, goal } = projectData;
-  return title && desc && goal;
+  const { title, description, goal } = projectData;
+  return title && description && goal;
 }

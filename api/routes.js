@@ -52,8 +52,8 @@ const routes = (app) => {
 
   app.post('/api/projects/create', async (req, res) => {
     try {
-      const { title, description, goal, innovator } = req.body;
-      const project = new ProjectModel({ title, description, goal, innovator });
+      const { title, description, goal, innovator, imageUrl } = req.body;
+      const project = new ProjectModel({ title, description, goal, innovator, imageUrl });
       await project.save();
       res.status(201).send({
         status: 201,

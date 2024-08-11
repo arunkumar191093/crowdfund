@@ -1,0 +1,22 @@
+[
+  {
+      "_id": "66b72f9898883a795f1975d0",
+      "title": "Mock project 1",
+      "description": "Mock project 1 desc",
+      "goal": 3500,
+      "raised": 895,
+      "innovator": "1278861923",
+      "archived": false,
+      "imageUrl": "https://fastly.picsum.photos/id/7/4728/3168.jpg?hmac=c5B5tfYFM9blHHMhuu4UKmhnbZoJqrzNOP9xjkV4w3o"
+  },
+  {
+      "_id": "66b79f13d80a7d06cdfcb6f0",
+      "title": "Mock project 2",
+      "description": "This is a test project to test the content of the description area. This is huge description content in order to monitor the elipsis attribute of the the project description adding junk character after this Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum",
+      "goal": 15000,
+      "raised": 0,
+      "innovator": "108321312",
+      "archived": false,
+      "imageUrl": "https://fastly.picsum.photos/id/13/2500/1667.jpg?hmac=SoX9UoHhN8HyklRA4A3vcCWJMVtiBXUg0W4ljWTor7s"
+  }
+]

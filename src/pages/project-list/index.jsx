@@ -1,15 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, lazy, Suspense } from 'react';
 import ProjectItem from '../../components/project-item';
-import Modal from '../../components/modal';
 import { getAllProjects, updateDonation } from '../../services/project-service';
 import {
   useGetUserData,
   useShowSnackbar,
   validateDonation
 } from '../../utils/helper';
-import InputText from '../../components/input-box';
 import SkeletonLoader from '../../components/skeleton-loader';
 import { errorMessages } from '../../utils/error-constants';
+
+const Modal = lazy(() => import('../../components/modal'));
+const InputText = lazy(() => import('../../components/input-box'));
 
 const ProjectList = () => {
   const [projects, setProjects] = useState([]);
@@ -77,11 +78,11 @@ const ProjectList = () => {
 
   return (
     <>
-      <div className="mx-6 mt-10 pb-24">
+      <div className="mx-16 mt-10 pb-24">
         <div className='flex justify-between mb-4'>
           <h2 className="text-2xl font-bold">All Projects</h2>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
           {
             loading &&
             <>
@@ -101,27 +102,29 @@ const ProjectList = () => {
       </div>
       {
         showModal &&
-        <Modal
-          title={`Thank you for your donation to : ${modalData?.title}`}
-          disableSuccess={donationAmount <= 0}
-          onClose={() => setShowModal(false)}
-          onSuccess={handleSubmitDonation}
-        >
-          <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
-            <div className="mt-2">
-              <p className="text-sm text-gray-500">Please enter the amount you would like to donate.</p>
+        <Suspense fallback={<div>Please wait ...</div>}>
+          <Modal
+            title={`Thank you for your donation to : ${modalData?.title}`}
+            disableSuccess={donationAmount <= 0}
+            onClose={() => setShowModal(false)}
+            onSuccess={handleSubmitDonation}
+          >
+            <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
+              <div className="mt-2">
+                <p className="text-sm text-gray-500">Please enter the amount you would like to donate.</p>
+              </div>
+              <InputText
+                placeholder="Enter the donation amount here"
+                type="number"
+                inputClass="w-full my-4 px-3 py-2 border rounded"
+                isRequired
+                dis
+                value={donationAmount}
+                onChange={setDonationAmout}
+              />
             </div>
-            <InputText
-              placeholder="Enter the donation amount here"
-              type="number"
-              inputClass="w-full my-4 px-3 py-2 border rounded"
-              isRequired
-              dis
-              value={donationAmount}
-              onChange={setDonationAmout}
-            />
-          </div>
-        </Modal>
+          </Modal>
+        </Suspense>
       }
     </>
   );

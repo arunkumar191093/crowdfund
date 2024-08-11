@@ -1,5 +1,3 @@
-import { useEffect, useState } from 'react';
-import imgData from '../../mock-images.json';
 import ProgressBar from '../progress-bar';
 
 const ProjectItem = ({
@@ -8,24 +6,15 @@ const ProjectItem = ({
   onDonate = () => { }
 }) => {
 
-  const [randomImg, setRandomImg] = useState('');
-
-  const getRandomImage = () => {
-    const randomIdx = Math.floor(Math.random() * 30)
-    setRandomImg(imgData[randomIdx])
-  }
-
-  useEffect(() => {
-    getRandomImage()
-  }, [])
-
   return (
-    <div className="max-w-sm rounded overflow-hidden shadow-lg">
-      <img className='w-full max-h-64' src={randomImg} alt={`project - ${projectData.title}`} />
+    <div className="max-w-sm rounded overflow-hidden shadow-lg cursor-pointer hover:shadow-2xl my-3">
+      <img className='w-full max-h-64' src={projectData.imageUrl} alt={`project - ${projectData.title}`} />
       <div className='px-6 pb-4'>
         <div className="py-4">
-          <div className="font-bold text-xl mb-2">{projectData.title}</div>
-          <p className="text-gray-700 text-base line-clamp-3" title={projectData.description}>
+          <div className="font-bold text-xl mb-2" data-testid="project-item-title">{projectData.title}</div>
+          <p className="text-gray-700 text-base line-clamp-3" title={projectData.description}
+            data-testid="project-item-desc"
+          >
             {projectData.description}
           </p>
         </div>
