@@ -90,17 +90,55 @@ const routes = (app) => {
         }
       }
       const project = await ProjectModel.findById(req.params.projectId);
-      project.raised += Number(amount);
-      if (project.raised >= project.goal) {
-        project.archived = true;
+      if (project) {
+        const currentVersion = project.__v;
+        if (!project.archived) {
+          const filter = {
+            _id: req.params.projectId,
+            __v: currentVersion // Ensure the version matches
+          };
+          const update = {
+            $set: {
+              raised: project.raised + Number(amount),
+              archived: project.raised + Number(amount) >= project.goal ? true : false,
+              __v: currentVersion + 1 // Increment the version
+            }
+          };
+
+          const result = await ProjectModel.updateOne(filter, update);
+
+          if (result.matchedCount > 0) {
+            console.log("Document updated successfully.");
+            res.send({
+              status: 200,
+              message: 'Donation added successfully',
+              project: result
+            });
+          } else {
+            console.log("Update failed due to version mismatch.");
+            res.send({
+              status: 500,
+              message: 'Unable to process your donation. Please try again later',
+              project: result
+            });
+          }
+
+        } else {
+          res.send({
+            status: 200,
+            message: 'Thanks for your support. We have already achieved our goal.',
+            project
+          });
+        }
+      } else {
+        res.send({
+          status: 404,
+          message: 'Project not found',
+          project: null
+        });
       }
-      await project.save();
-      res.send({
-        status: 200,
-        message: 'Donation added successfully',
-        project
-      });
     } catch (error) {
+      console.log('Error in donation', error)
       handleErrors(res, error);
     }
   });

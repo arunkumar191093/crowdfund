@@ -79,3 +79,6 @@ Future scopes:
  - Can have login via gmail 
  - have end date for every project enabled for donation
  - Make description in create project as rich text editor
+ - We can have a minimum amount of donation for a project
+ - Search filteration ( based on type of project) like solar project, electronic projects, NGO
+ - Show a carousel of all projects ( to give all projects same priority)
